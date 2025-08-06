@@ -46,6 +46,7 @@ jobs:
       role_to_assume: ${{ steps.env.outputs.ROLE_TO_ASSUME }}
       role_session_name: ${{ steps.env.outputs.ROLE_SESSION_NAME }}
       need_to_push_image: false
+      need_to_deploy: false
 
     steps:
       - name: Checkout
@@ -136,7 +137,7 @@ jobs:
 
   deploy:
     name: Deploy to ECS
-    if: needs.setup.outputs.need_to_push_image == 'true'
+    if: needs.setup.outputs.need_to_deploy == 'true'
     needs:
       - setup
       - build
