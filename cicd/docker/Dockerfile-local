@@ -1,0 +1,39 @@
+# Build Stage
+FROM maven:3.9-eclipse-temurin-21-alpine AS build
+
+LABEL name="spring-lotto-api" version=1.0.0 \
+ org.chiwoo.image.created="2025-08" \
+ org.chiwoo.image.version="amazoncorretto-21" \
+ org.chiwoo.image.title="spring-lotto-api" \
+ org.chiwoo.image.description="Dockerfile for Lotto API Service" \
+ org.chiwoo.image.source="https://github.com/"
+
+WORKDIR /app
+
+COPY pom.xml .
+COPY src ./src
+
+RUN mvn -B -q -DskipTests clean package
+
+# Runtime Stage
+FROM amazoncorretto:21-alpine
+
+ENV PROFILE=""
+ENV JAVA_OPTS="-server -Xverify:none"
+ENV JAVA_OPTS="$JAVA_OPTS -Dsun.misc.URLClassPath.disableJarChecking=true"
+ENV JAVA_OPTS="$JAVA_OPTS -Dspring.profiles.active=${PROFILE}"
+
+# RUN apk add --no-cache bash curl
+RUN mkdir -p /app/logs && chmod 664 /app/logs
+
+WORKDIR /app
+
+COPY --from=build /app/target/*.jar springApp.jar
+
+COPY ./cicd/docker/entrypoint.sh /app/
+
+RUN chmod +x /app/entrypoint.sh
+
+EXPOSE 8080
+
+ENTRYPOINT ["/app/entrypoint.sh"]
