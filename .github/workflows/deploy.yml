@@ -45,7 +45,7 @@ jobs:
       aws_region: ${{ steps.env.outputs.AWS_REGION }}
       role_to_assume: ${{ steps.env.outputs.ROLE_TO_ASSUME }}
       role_session_name: ${{ steps.env.outputs.ROLE_SESSION_NAME }}
-      need_to_push_image: false
+      need_to_push_image: true
       need_to_deploy: false
 
     steps:
