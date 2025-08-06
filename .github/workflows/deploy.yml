@@ -45,8 +45,8 @@ jobs:
       aws_region: ${{ steps.env.outputs.AWS_REGION }}
       role_to_assume: ${{ steps.env.outputs.ROLE_TO_ASSUME }}
       role_session_name: ${{ steps.env.outputs.ROLE_SESSION_NAME }}
-      need_to_push_image: true
-      need_to_deploy: false
+      need_to_push_image: ${{ steps.env.outputs.need_to_push_image }}
+      need_to_deploy: ${{ steps.env.outputs.need_to_deploy }}
 
     steps:
       - name: Checkout
@@ -89,6 +89,9 @@ jobs:
             export "$key=$value"
             echo "$key=$value" >> "$GITHUB_OUTPUT"
           done < <(grep -v '^#' "${ENV_FILE}" | grep '=')
+          echo "need_to_push_image=true" >> $GITHUB_OUTPUT
+          echo "need_to_deploy=true" >> $GITHUB_OUTPUT
+          
 
   build:
     name: Build and Push Image
