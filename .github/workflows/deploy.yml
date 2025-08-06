@@ -90,7 +90,7 @@ jobs:
             echo "$key=$value" >> "$GITHUB_OUTPUT"
           done < <(grep -v '^#' "${ENV_FILE}" | grep '=')
           echo "need_to_push_image=true" >> $GITHUB_OUTPUT
-          echo "need_to_deploy=true" >> $GITHUB_OUTPUT
+          echo "need_to_deploy=false" >> $GITHUB_OUTPUT
           
 
   build:
